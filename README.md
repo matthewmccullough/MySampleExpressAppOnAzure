@@ -2,6 +2,7 @@
 
 
 - [ ] Create a project
+- [ ] Protect master
 - [ ] Setup issue template
 - [ ] Setup CODEOWNERS
 - [ ] Give the replicant team write access
