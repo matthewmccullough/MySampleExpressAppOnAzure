@@ -73,4 +73,5 @@ action "Grab Zeit Deployment Id" {
   uses = "./actions/GrabZeitDeployment"
   needs = ["Deploy to Zeit Test"]
   args = "/github/home/zeit-test.out"
+  cmd = "cat /github/workflow/event.json"
 }
