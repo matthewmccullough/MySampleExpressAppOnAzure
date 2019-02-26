@@ -30,7 +30,7 @@ action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   needs = ["Test Deployment"]
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test"
+  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF"
 }
 
 workflow "Deploy to Staging" {
