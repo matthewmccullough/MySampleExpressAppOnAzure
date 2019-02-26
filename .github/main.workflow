@@ -53,7 +53,7 @@ action "Deploy to Zeit Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Production",
+    "Deploy to Zeit Production"
   ]
 }
 
