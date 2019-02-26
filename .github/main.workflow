@@ -16,9 +16,7 @@ action "Test" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = [
-    "Deploy to Zeit Test",
-  ]
+  resolves = ["Deploy to Zeit Test"]
 }
 
 action "Test Deployment" {
@@ -30,7 +28,7 @@ action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   needs = ["Test Deployment"]
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF"
+  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > zeit-test.out"
 }
 
 workflow "Deploy to Staging" {
