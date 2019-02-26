@@ -16,18 +16,46 @@ action "Test" {
 
 workflow "Deploy" {
   on = "deployment"
-  resolves = ["Remove old deployment"]
+  resolves = [
+    "Remove old deployment",
+    "Deploy to Zeit Test",
+  ]
 }
 
-action "Deploy to Zeit" {
+action "Test Deployment" {
+  uses = "actions/bin/filter@master"
+  args = "environment test"
+}
+
+action "Production Deployment" {
+  uses = "actions/bin/filter@master"
+  args = "environment production"
+}
+
+action "Staging Deployment" {
+  uses = "actions/bin/filter@master"
+  args = "environment staging"
+}
+
+action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
-  runs = "now --public -n mysampleexpressapp"
+  needs = ["Test Deployment"]
+  runs = "now --public -n mysampleexpressapp-test"
   secrets = ["ZEIT_TOKEN"]
 }
 
-action "Remove old deployment" {
-  uses = "actions/zeit-now@666edee2f3632660e9829cb6801ee5b7d47b303d"
-  needs = ["Deploy to Zeit"]
+action "Deploy to Zeit Production" {
+  uses = "actions/zeit-now@master"
+  needs = ["Production Deployment"]
+  runs = "now --public -n mysampleexpressapp-production"
   secrets = ["ZEIT_TOKEN"]
-  runs = "now rm mysampleexpressapp --safe --yes"
 }
+
+action "Deploy to Zeit Staging" {
+  uses = "actions/zeit-now@master"
+  needs = ["Staging Deployment"]
+  runs = "now --public -n mysampleexpressapp-staging"
+  secrets = ["ZEIT_TOKEN"]
+}
+
+
