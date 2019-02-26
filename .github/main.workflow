@@ -5,13 +5,13 @@ workflow "Continuous Integration" {
 
 action "Install" {
   uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  runs = "npm install"
+  args = "install"
 }
 
 action "Test" {
   uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
   needs = ["Install"]
-  runs = "npm test"
+  argd = "test"
 }
 
 workflow "Deploy to Test" {
@@ -29,8 +29,8 @@ action "Test Deployment" {
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   needs = ["Test Deployment"]
-  runs = "--public -n mysampleexpressapp-test"
   secrets = ["ZEIT_TOKEN"]
+  args = "--public -n mysampleexpressapp-test"
 }
 
 workflow "Deploy to Staging" {
@@ -48,7 +48,7 @@ action "Staging Deployment" {
 action "Deploy to Zeit Staging" {
   uses = "actions/zeit-now@master"
   needs = ["Staging Deployment"]
-  runs = "now --public -n mysampleexpressapp-staging"
+  args = "--public -n mysampleexpressapp-staging"
   secrets = ["ZEIT_TOKEN"]
 }
 
@@ -67,6 +67,6 @@ action "Production Deployment" {
 action "Deploy to Zeit Production" {
   uses = "actions/zeit-now@master"
   needs = ["Production Deployment"]
-  runs = "now --public -n mysampleexpressapp-production"
+  args = "--public -n mysampleexpressapp-production"
   secrets = ["ZEIT_TOKEN"]
 }
