@@ -8,10 +8,7 @@ DEPLOYMENT_ENVIRONMENT=$(jq -r .deployment.environment $GITHUB_EVENT_PATH)
 DESCRIPTION="Deployed in $DEPLOYMENT_ENVIRONMENT"
 TARGET_URL=$*
 
-
-echo $GITHUB_TOKEN
-echo $DEPLOYMENT_ENVIRONMENT
-echo $DEPLOYMENT_STATUS_URL
+echo "************"
 echo $TARGET_URL
 
 JSON_STRING=$( jq -n \
