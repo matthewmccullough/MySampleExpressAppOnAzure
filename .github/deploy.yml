@@ -1,11 +1,11 @@
 labels:
-  Deploy%20to%20Production:
+  ':rocket: Deploy to Production':
     environment: production
     description: Production deployment
-  Deploy%20to%20Staging:
+  ':rocket: Deploy to Staging':
     environment: staging
     description: Staging deployment
-  Deploy%20to%20Test:
+  ':rocket: Deploy to Test':
     environment: test
     description: Test deployment
     transient_environment: true
