@@ -14,28 +14,16 @@ action "Test" {
   runs = "npm test"
 }
 
-workflow "Deploy" {
+workflow "Deploy to Test" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Production",
-    "Deploy to Zeit Staging",
-    "Deploy to Zeit Test",
+    "Deploy to Zeit Test"
   ]
 }
 
 action "Test Deployment" {
   uses = "actions/bin/filter@master"
   args = "environment test"
-}
-
-action "Production Deployment" {
-  uses = "actions/bin/filter@master"
-  args = "environment production"
-}
-
-action "Staging Deployment" {
-  uses = "actions/bin/filter@master"
-  args = "environment staging"
 }
 
 action "Deploy to Zeit Test" {
@@ -45,11 +33,16 @@ action "Deploy to Zeit Test" {
   secrets = ["ZEIT_TOKEN"]
 }
 
-action "Deploy to Zeit Production" {
-  uses = "actions/zeit-now@master"
-  needs = ["Production Deployment"]
-  runs = "now --public -n mysampleexpressapp-production"
-  secrets = ["ZEIT_TOKEN"]
+workflow "Deploy to Staging" {
+  on = "deployment"
+  resolves = [
+    "Deploy to Zeit Staging"
+  ]
+}
+
+action "Staging Deployment" {
+  uses = "actions/bin/filter@master"
+  args = "environment staging"
 }
 
 action "Deploy to Zeit Staging" {
@@ -59,4 +52,22 @@ action "Deploy to Zeit Staging" {
   secrets = ["ZEIT_TOKEN"]
 }
 
+workflow "Deploy to Production" {
+  on = "deployment"
+  resolves = [
+    "Deploy to Zeit Production"
+  ]
+}
+
+action "Production Deployment" {
+  uses = "actions/bin/filter@master"
+  args = "environment production"
+}
+
+action "Deploy to Zeit Production" {
+  uses = "actions/zeit-now@master"
+  needs = ["Production Deployment"]
+  runs = "now --public -n mysampleexpressapp-production"
+  secrets = ["ZEIT_TOKEN"]
+}
 
