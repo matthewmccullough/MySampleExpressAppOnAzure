@@ -79,5 +79,5 @@ action "Update Deploy Status for Test" {
   uses = "./actions/DeployStatusUpdateAction"
   needs = ["Deploy to Zeit Test"]
   secrets = ["GITHUB_TOKEN"]
-  args = "`cat /github/home/zeit-test.out`"
+  args = "'cat /github/home/zeit-test.out'"
 }
