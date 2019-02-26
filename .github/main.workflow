@@ -95,7 +95,7 @@ action "Update Deploy Status for Production" {
   uses = "./actions/DeployStatusUpdateAction"
   needs = ["Alias Zeit Production"]
   secrets = ["GITHUB_TOKEN"]
-  args = "'https://mysampleexpressapp-prod.now.sh'"
+  args = "echo 'https://mysampleexpressapp-prod.now.sh'"
 }
 
 action "Clean up Zeit Production" {
