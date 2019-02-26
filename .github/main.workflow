@@ -17,7 +17,8 @@ action "Test" {
 workflow "Deploy" {
   on = "deployment"
   resolves = [
-    "Remove old deployment",
+    "Deploy to Zeit Production",
+    "Deploy to Zeit Staging",
     "Deploy to Zeit Test",
   ]
 }
