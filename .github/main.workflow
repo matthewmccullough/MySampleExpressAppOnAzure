@@ -4,12 +4,12 @@ workflow "Continuous Integration" {
 }
 
 action "Install" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  uses = "actions/npm@master"
   args = "install"
 }
 
 action "Test" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  uses = "actions/npm@master"
   needs = ["Install"]
   args = "test"
 }
@@ -72,6 +72,5 @@ action "Deploy to Zeit Production" {
 action "Grab Zeit Deployment Id" {
   uses = "./actions/GrabZeitDeployment"
   needs = ["Deploy to Zeit Test"]
-  args = "/github/home/zeit-test.out"
-  runs = "cat /github/workflow/event.json"
+  args = "$HOME/zeit-test.out"
 }
