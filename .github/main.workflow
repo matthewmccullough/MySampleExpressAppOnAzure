@@ -13,3 +13,12 @@ action "Test" {
   needs = ["Install"]
   runs = "npm test"
 }
+
+workflow "Deploy" {
+  on = "deployment"
+  resolves = ["Deploy to Zeit"]
+}
+
+action "Deploy to Zeit" {
+  uses = "actions/zeit-now@master"
+}
