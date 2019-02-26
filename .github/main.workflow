@@ -16,7 +16,7 @@ action "Test" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Grab Zeit Deployment Id"]
+  resolves = ["Grab Zeit Deployment Id", "Update Deploy Status for Test"]
 }
 
 action "Test Deployment" {
