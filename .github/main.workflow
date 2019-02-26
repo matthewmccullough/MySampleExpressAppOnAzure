@@ -16,7 +16,7 @@ action "Test" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Grab Zeit Deployment Id", "Update Deploy Status for Test"]
+  resolves = ["Update Deploy Status for Test"]
 }
 
 action "Test Deployment" {
@@ -67,12 +67,6 @@ action "Deploy to Zeit Production" {
   needs = ["Production Deployment"]
   args = "--public -n mysampleexpressapp-production"
   secrets = ["ZEIT_TOKEN"]
-}
-
-action "Grab Zeit Deployment Id" {
-  uses = "./actions/GrabZeitDeployment"
-  needs = ["Deploy to Zeit Test"]
-  args = "$HOME/zeit-test.out"
 }
 
 action "Update Deploy Status for Test" {
