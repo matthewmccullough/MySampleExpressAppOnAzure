@@ -17,7 +17,7 @@ action "Test" {
 workflow "Deploy to Test" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Test"
+    "Deploy to Zeit Test",
   ]
 }
 
@@ -29,14 +29,14 @@ action "Test Deployment" {
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   needs = ["Test Deployment"]
-  runs = "now --public -n mysampleexpressapp-test"
+  runs = "--public -n mysampleexpressapp-test"
   secrets = ["ZEIT_TOKEN"]
 }
 
 workflow "Deploy to Staging" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Staging"
+    "Deploy to Zeit Staging",
   ]
 }
 
@@ -55,7 +55,7 @@ action "Deploy to Zeit Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Production"
+    "Deploy to Zeit Production",
   ]
 }
 
@@ -70,4 +70,3 @@ action "Deploy to Zeit Production" {
   runs = "now --public -n mysampleexpressapp-production"
   secrets = ["ZEIT_TOKEN"]
 }
-
