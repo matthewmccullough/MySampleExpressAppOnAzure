@@ -16,7 +16,7 @@ action "Test" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Deploy to Zeit Test"]
+  resolves = ["Grab Zeit Deployment Id"]
 }
 
 action "Test Deployment" {
@@ -28,7 +28,7 @@ action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   needs = ["Test Deployment"]
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > zeit-test.out"
+  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > $HOME/zeit-test.out"
 }
 
 workflow "Deploy to Staging" {
@@ -53,7 +53,7 @@ action "Deploy to Zeit Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Production"
+    "Deploy to Zeit Production",
   ]
 }
 
@@ -67,4 +67,10 @@ action "Deploy to Zeit Production" {
   needs = ["Production Deployment"]
   args = "--public -n mysampleexpressapp-production"
   secrets = ["ZEIT_TOKEN"]
+}
+
+action "Grab Zeit Deployment Id" {
+  uses = "./actions/GrabZeitDeployment"
+  needs = ["Deploy to Zeit Test"]
+  args = "/github/home/zeit-test.out"
 }
