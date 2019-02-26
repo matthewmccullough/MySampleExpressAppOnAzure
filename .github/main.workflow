@@ -68,7 +68,7 @@ action "Update Deploy Status for Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Update Deploy Status for Production",
+    "Clean up Zeit Production"
   ]
 }
 
@@ -95,5 +95,12 @@ action "Update Deploy Status for Production" {
   uses = "./actions/DeployStatusUpdateAction"
   needs = ["Alias Zeit Production"]
   secrets = ["GITHUB_TOKEN"]
-  args = "cat /github/home/zeit-production.out"
+  args = "'https://mysampleexpressapp-prod.now.sh'"
+}
+
+action "Clean up Zeit Production" {
+  needs = ["Update Deploy Status for Production"]
+  uses = "actions/zeit-now@master"
+  args = "now rm mysampleexpressapp-production --safe --yes"
+  secrets = ["ZEIT_TOKEN"]
 }
