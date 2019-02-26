@@ -101,6 +101,6 @@ action "Update Deploy Status for Production" {
 action "Clean up Zeit Production" {
   needs = ["Update Deploy Status for Production"]
   uses = "actions/zeit-now@master"
-  args = "now rm mysampleexpressapp-production --safe --yes"
+  args = "rm mysampleexpressapp-production --safe --yes"
   secrets = ["ZEIT_TOKEN"]
 }
