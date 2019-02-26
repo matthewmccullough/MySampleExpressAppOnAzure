@@ -2,4 +2,4 @@
 
 set -e
 
-sh -c "cat $*"
+sh -c "cat /github/home/zeit-test.out"
