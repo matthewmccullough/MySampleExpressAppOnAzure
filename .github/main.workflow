@@ -31,10 +31,18 @@ action "Deploy to Zeit Test" {
   args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > $HOME/zeit-test.out"
 }
 
+action "Update Deploy Status for Test" {
+  uses = "./actions/DeployStatusUpdateAction"
+  needs = ["Deploy to Zeit Test"]
+  secrets = ["GITHUB_TOKEN"]
+  args = "cat /github/home/zeit-test.out"
+}
+
+
 workflow "Deploy to Staging" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Staging",
+    "Update Deploy Status for Staging",
   ]
 }
 
@@ -46,14 +54,21 @@ action "Staging Deployment" {
 action "Deploy to Zeit Staging" {
   uses = "actions/zeit-now@master"
   needs = ["Staging Deployment"]
-  args = "--public -n mysampleexpressapp-staging"
+  args = "--public -n mysampleexpressapp-staging -m PR=$GITHUB_REF > $HOME/zeit-staging.out"
   secrets = ["ZEIT_TOKEN"]
+}
+
+action "Update Deploy Status for Staging" {
+  uses = "./actions/DeployStatusUpdateAction"
+  needs = ["Deploy to Zeit Staging"]
+  secrets = ["GITHUB_TOKEN"]
+  args = "cat /github/home/zeit-staging.out"
 }
 
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Deploy to Zeit Production",
+    "Update Deploy Status for Production",
   ]
 }
 
@@ -65,13 +80,20 @@ action "Production Deployment" {
 action "Deploy to Zeit Production" {
   uses = "actions/zeit-now@master"
   needs = ["Production Deployment"]
-  args = "--public -n mysampleexpressapp-production"
+  args = "--public -n mysampleexpressapp-production -m PR=$GITHUB_REF > $HOME/zeit-production.out"
   secrets = ["ZEIT_TOKEN"]
 }
 
-action "Update Deploy Status for Test" {
+action "Alias Zeit Production" {
+  needs = ["Deploy to Zeit Production"]
+  uses = "actions/zeit-now@master"
+  args = "alias `cat $HOME/zeit-production.out` https://mysampleexpressapp-prod.now.sh"
+  secrets = ["ZEIT_TOKEN"]
+}
+
+action "Update Deploy Status for Production" {
   uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Zeit Test"]
+  needs = ["Alias Zeit Production"]
   secrets = ["GITHUB_TOKEN"]
-  args = "cat /github/home/zeit-test.out"
+  args = "cat /github/home/zeit-production.out"
 }
