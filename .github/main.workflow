@@ -72,6 +72,5 @@ action "Deploy to Zeit Production" {
 action "Grab Zeit Deployment Id" {
   uses = "./actions/GrabZeitDeployment"
   needs = ["Deploy to Zeit Test"]
-  args = "/github/home/zeit-test.out"
-  runs = "cat /github/workflow/event.json"
+  args = "$HOME/zeit-test.out"
 }
