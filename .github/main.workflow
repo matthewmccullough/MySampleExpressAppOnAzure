@@ -1,6 +1,6 @@
 workflow "Continuous Integration" {
   on = "push"
-  resolves = ["Generate doc"]
+  resolves = ["Test"]
 }
 
 action "Install" {
@@ -14,9 +14,13 @@ action "Test" {
   args = "test"
 }
 
+workflow "Documentation" {
+  on = "push"
+  resolves = ["Generate doc"]
+}
+
 action "Filter for Doc generation" {
   uses = "actions/bin/filter@master"
-  needs = ["Test"]
   args = "branch master"
 }
 
