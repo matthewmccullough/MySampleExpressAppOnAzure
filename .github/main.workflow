@@ -14,6 +14,22 @@ action "Test" {
   args = "test"
 }
 
+workflow "Documentation" {
+  on = "push"
+  resolves = ["Generate doc"]
+}
+
+action "Filter for Doc generation" {
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
+action "Generate doc" {
+  uses = "helaili/jekyll-action@master"
+  needs = ["Filter for Doc generation"]
+  secrets = ["JEKYLL_PAT"]
+}
+
 workflow "Deploy to Test" {
   on = "deployment"
   resolves = ["Update Deploy Status for Test"]
@@ -37,7 +53,6 @@ action "Update Deploy Status for Test" {
   secrets = ["GITHUB_TOKEN"]
   args = "cat /github/home/zeit-test.out"
 }
-
 
 workflow "Deploy to Staging" {
   on = "deployment"
@@ -68,7 +83,7 @@ action "Update Deploy Status for Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Clean up Zeit Production"
+    "Clean up Zeit Production",
   ]
 }
 
