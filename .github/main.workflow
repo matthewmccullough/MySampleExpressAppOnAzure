@@ -25,9 +25,9 @@ action "Filter for Doc generation" {
 }
 
 action "Generate doc" {
-  uses = "helaili/jekyll-action@master"
+  uses = "helaili/jekyll-action@9230ad427e62b6eb4c6e1fbdbfec13ced306853d"
   needs = ["Filter for Doc generation"]
-  secrets = ["GITHUB_TOKEN"]
+  secrets = ["JEKYLL_PAT"]
 }
 
 workflow "Deploy to Test" {
