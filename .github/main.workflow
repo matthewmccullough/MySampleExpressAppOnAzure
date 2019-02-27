@@ -1,6 +1,6 @@
 workflow "Continuous Integration" {
   on = "push"
-  resolves = ["Test"]
+  resolves = ["Generate doc"]
 }
 
 action "Install" {
@@ -12,6 +12,18 @@ action "Test" {
   uses = "actions/npm@master"
   needs = ["Install"]
   args = "test"
+}
+
+action "Filter for Doc generation" {
+  uses = "actions/bin/filter@master"
+  needs = ["Test"]
+  args = "branch master"
+}
+
+action "Generate doc" {
+  uses = "helaili/jekyll-action@master"
+  needs = ["Filter for Doc generation"]
+  secrets = ["GITHUB_TOKEN"]
 }
 
 workflow "Deploy to Test" {

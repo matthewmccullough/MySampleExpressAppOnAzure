@@ -1,0 +1,20 @@
+= Sample AsciiDoc site built with a Jekyll Action
+:icons: font
+:showtitle:
+:toc: right
+:sourcedir: ..
+:page-title: Sample Site
+:page-description: Home of a sample AsciiDoc site built with the Jekyll Action.
+
+== What's in the site????
+
+So many awesome things!!!
+
+[source,html,linenums,indent=0]
+----
+include::{sourcedir}/public/index.html[tags=welcome]
+----
+
+:source-highlighter: pygments
+:pygments-style: manni
+:pygments-linenums-mode: inline
