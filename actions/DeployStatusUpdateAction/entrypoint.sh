@@ -13,4 +13,4 @@ JSON_STRING=$( jq -n \
                   --arg url "$TARGET_URL" \
                   '{"state": "success", "description": $desc, "environment_url": $url}' )
 
-curl -k -H "Authorization: token $GITHUB_TOKEN" -d "$JSON_STRING" $DEPLOYMENT_STATUS_URL
+curl -k -H "Authorization: token $GITHUB_TOKEN" -H "accept: application/vnd.github.ant-man-preview+json,application/vnd.github.flash-preview+json" -d "$JSON_STRING" $DEPLOYMENT_STATUS_URL
