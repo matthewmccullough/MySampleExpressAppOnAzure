@@ -14,6 +14,22 @@ action "Test" {
   args = "test"
 }
 
+workflow "Documentation" {
+  on = "push"
+  resolves = ["Generate doc"]
+}
+
+action "Filter for Doc generation" {
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
+action "Generate doc" {
+  uses = "helaili/jekyll-action@master"
+  needs = ["Filter for Doc generation"]
+  secrets = ["GITHUB_TOKEN"]
+}
+
 workflow "Deploy to Test" {
   on = "deployment"
   resolves = ["Update Deploy Status for Test"]
