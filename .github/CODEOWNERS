@@ -1,0 +1,4 @@
+### Code owners
+
+## JS Code belongs to the replicants team
+*.js     @octodemo/replicants
