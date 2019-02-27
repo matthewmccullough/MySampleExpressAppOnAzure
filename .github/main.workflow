@@ -38,7 +38,6 @@ action "Update Deploy Status for Test" {
   args = "cat /github/home/zeit-test.out"
 }
 
-
 workflow "Deploy to Staging" {
   on = "deployment"
   resolves = [
@@ -68,7 +67,7 @@ action "Update Deploy Status for Staging" {
 workflow "Deploy to Production" {
   on = "deployment"
   resolves = [
-    "Clean up Zeit Production"
+    "Clean up Zeit Production",
   ]
 }
 
