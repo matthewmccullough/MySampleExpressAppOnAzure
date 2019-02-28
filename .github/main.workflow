@@ -44,7 +44,7 @@ action "Env is Test" {
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m test=true -m PR=$GITHUB_REF > $HOME/zeit-test.out"
+  args = "--public -n mysampleexpressapp-test -m test=true -m ref=$GITHUB_REF > $HOME/zeit-test.out"
   needs = ["Env is Test"]
 }
 
@@ -123,7 +123,7 @@ action "Clean up Zeit Production" {
 
 workflow "Cleanup envs" {
   on = "pull_request"
-  resolves = ["Filters for closed PRs"]
+  resolves = ["GitHub Action for Zeit"]
 }
 
 action "Debug" {
@@ -134,4 +134,10 @@ action "Filters for closed PRs" {
   uses = "actions/bin/filter@master"
   needs = ["Debug"]
   args = "action closed"
+}
+
+action "GitHub Action for Zeit" {
+  uses = "actions/zeit-now@master"
+  needs = ["Filters for closed PRs"]
+  args = "ls -m ref=$GITHUB_REF > zeit_instances.out"
 }
