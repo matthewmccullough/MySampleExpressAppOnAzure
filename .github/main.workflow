@@ -35,16 +35,17 @@ workflow "Deploy to Test" {
   resolves = ["Update Deploy Status for Test"]
 }
 
-action "Test Deployment" {
+action "Env is Test" {
   uses = "actions/bin/filter@master"
   args = "environment test"
+  needs = ["Debug"]
 }
 
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
-  needs = ["Test Deployment"]
   secrets = ["ZEIT_TOKEN"]
   args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > $HOME/zeit-test.out"
+  needs = ["Env is Test"]
 }
 
 action "Update Deploy Status for Test" {
