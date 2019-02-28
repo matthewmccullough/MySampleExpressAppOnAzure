@@ -35,16 +35,17 @@ workflow "Deploy to Test" {
   resolves = ["Update Deploy Status for Test"]
 }
 
-action "Test Deployment" {
+action "Env is Test" {
   uses = "actions/bin/filter@master"
   args = "environment test"
+  needs = ["Debug"]
 }
 
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
-  needs = ["Test Deployment"]
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > $HOME/zeit-test.out"
+  args = "--public -n mysampleexpressapp-test -m test=true -m ref=$GITHUB_REF > $HOME/zeit-test.out"
+  needs = ["Env is Test"]
 }
 
 action "Update Deploy Status for Test" {
@@ -122,7 +123,7 @@ action "Clean up Zeit Production" {
 
 workflow "Cleanup envs" {
   on = "pull_request"
-  resolves = ["Filters for closed PRs"]
+  resolves = ["List instances"]
 }
 
 action "Debug" {
@@ -133,4 +134,10 @@ action "Filters for closed PRs" {
   uses = "actions/bin/filter@master"
   needs = ["Debug"]
   args = "action closed"
+}
+
+action "List instances" {
+  uses = "actions/zeit-now@master"
+  needs = ["Filters for closed PRs"]
+  args = "ls -m ref=$GITHUB_REF > zeit_instances.out"
 }
