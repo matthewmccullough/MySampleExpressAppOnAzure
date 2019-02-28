@@ -132,7 +132,6 @@ action "Debug" {
 
 action "Filters for closed PRs" {
   uses = "actions/bin/filter@master"
-  needs = ["Debug"]
   args = "action closed"
 }
 
@@ -140,6 +139,7 @@ action "List instances" {
   uses = "actions/zeit-now@master"
   needs = ["Filters for closed PRs"]
   args = "ls -m ref=$GITHUB_REF > $HOME/zeit_instances.out"
+  secrets = ["ZEIT_TOKEN"]
 }
 
 action "debug zeit output" {
