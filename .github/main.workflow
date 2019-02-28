@@ -143,7 +143,7 @@ action "List instances" {
 }
 
 action "debug zeit output" {
-  uses = "helaili/debug-action@ec9de29f502a438008a2d42231e3be9d9acc1345"
+  uses = "helaili/debug-action@9c691e6c7ca1c8dd6fce3e7fbb7edbccf93bcc32"
   needs = ["List instances"]
   args = "$HOME/zeit_instances.out"
 }
