@@ -44,7 +44,7 @@ action "Env is Test" {
 action "Deploy to Zeit Test" {
   uses = "actions/zeit-now@master"
   secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m PR=$GITHUB_REF > $HOME/zeit-test.out"
+  args = "--public -n mysampleexpressapp-test -m test=true -m PR=$GITHUB_REF > $HOME/zeit-test.out"
   needs = ["Env is Test"]
 }
 
