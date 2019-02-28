@@ -119,3 +119,12 @@ action "Clean up Zeit Production" {
   args = "rm mysampleexpressapp-production --safe --yes"
   secrets = ["ZEIT_TOKEN"]
 }
+
+workflow "Cleanup envs" {
+  on = "pull_request"
+  resolves = ["Debug"]
+}
+
+action "Debug" {
+  uses = "hmarr/debug-action@master"
+}
