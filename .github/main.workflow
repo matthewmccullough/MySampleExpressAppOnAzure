@@ -122,9 +122,15 @@ action "Clean up Zeit Production" {
 
 workflow "Cleanup envs" {
   on = "pull_request"
-  resolves = ["Debug"]
+  resolves = ["Filters for closed PRs"]
 }
 
 action "Debug" {
   uses = "hmarr/debug-action@master"
+}
+
+action "Filters for closed PRs" {
+  uses = "actions/bin/filter@master"
+  needs = ["Debug"]
+  args = "action closed"
 }
