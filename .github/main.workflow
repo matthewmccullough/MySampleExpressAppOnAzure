@@ -123,7 +123,7 @@ action "Clean up Zeit Production" {
 
 workflow "Cleanup envs" {
   on = "pull_request"
-  resolves = ["GitHub Action for Zeit"]
+  resolves = ["List instances"]
 }
 
 action "Debug" {
@@ -136,7 +136,7 @@ action "Filters for closed PRs" {
   args = "action closed"
 }
 
-action "GitHub Action for Zeit" {
+action "List instances" {
   uses = "actions/zeit-now@master"
   needs = ["Filters for closed PRs"]
   args = "ls -m ref=$GITHUB_REF > zeit_instances.out"
