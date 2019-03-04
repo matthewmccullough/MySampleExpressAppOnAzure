@@ -61,7 +61,8 @@ action "Azure Login" {
 action "Azure Regsitry Login" {
   uses = "actions/docker/login@master"
   needs = ["Azure Login"]
-  args = "octodemo.azurecr.io"
+  args = "-u admin -p $REGISTRY_PASSWORD octodemo.azurecr.io"
+  secrets = ["REGISTRY_PASSWORD"]
 }
 
 action "Push Docker Image" {
