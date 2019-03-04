@@ -1,7 +1,7 @@
 workflow "Continuous Integration" {
   on = "push"
   resolves = [
-    "Test",
+    "Test", "debug"
   ]
 }
 
@@ -101,4 +101,18 @@ action "Deploy to Azure WebappContainer" {
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
   }
   runs = "export CONTAINER_IMAGE_TAG=$GITHUB_SHA && entrypoint.sh"
+}
+
+action "debug" {
+  uses = "Azure/github-actions/containerwebapp@master"
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
+  ]
+  env = {
+    AZURE_APP_NAME = "mysampleexpressapp-actions"
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+    CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
+  }
+  runs = "set CONTAINER_IMAGE_TAG=$GITHUB_SHA && /entrypoint.sh"
 }
