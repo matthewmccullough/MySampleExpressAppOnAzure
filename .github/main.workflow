@@ -1,8 +1,7 @@
 workflow "Continuous Integration" {
   on = "push"
   resolves = [
-    "Test",
-    "Deploy to Azure WebappContainer",
+    "Test"
   ]
 }
 
@@ -35,7 +34,7 @@ action "Generate doc" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Azure Login"]
+  resolves = ["Deploy to Azure WebappContainer"]
 }
 
 action "Env is Test" {
@@ -45,6 +44,7 @@ action "Env is Test" {
 
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
+  needs = ["Env is Test"]
   args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
 }
 
