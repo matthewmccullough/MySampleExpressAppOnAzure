@@ -58,13 +58,10 @@ action "Azure Login" {
   args = "--name octodemo.azurecr.io"
 }
 
-
- action "Azure Regsitry Login" {
-  uses = "Azure/github-actions/cli@master"
+action "Azure Regsitry Login" {
+  uses = "actions/docker/login@master"
   needs = ["Azure Login"]
-  env = {
-    AZURE_SCRIPT = "az acr login --name octodemo"
-  }
+  args = "octodemo.azurecr.io"
 }
 
 action "Push Docker Image" {
