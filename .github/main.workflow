@@ -115,5 +115,5 @@ action "debug" {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
   }
-  runs = "sh -c \"set CONTAINER_IMAGE_TAG=$GITHUB_SHA && /entrypoint.sh\""
+  runs = "sh -c 'set CONTAINER_IMAGE_TAG=$GITHUB_SHA && /entrypoint.sh'"
 }
