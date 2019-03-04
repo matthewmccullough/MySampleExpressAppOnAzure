@@ -42,6 +42,5 @@ action "Env is Test" {
 
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
-  needs = ["Env is Test"]
   args = "build -t octodemo/mysampleexpressappazure:$GITHUB_SHA -t octodemo/mysampleexpressappazure-$GITHUB_REF ."
 }
