@@ -2,7 +2,7 @@ workflow "Continuous Integration" {
   on = "push"
   resolves = [
     "Test",
-    "Push Docker Image",
+    "Deploy to Azure WebappContainer",
   ]
 }
 
@@ -75,3 +75,17 @@ action "Push Docker Image" {
   needs = ["Azure Regsitry Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
+
+action "Deploy to Azure WebappContainer" {
+  uses = "Azure/github-actions/containerwebapp@master"
+  secrets = ["DOCKER_PASSWORD", 
+            "DOCKER_USERNAME",]
+  needs = ["Push Docker Image"]
+  env = {
+    AZURE_APP_NAME = "mysampleexpressappazure"
+    CONTAINER_IMAGE_NAME = "$(octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA)" 
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+  }
+   needs = ["Push Docker Image"]
+}
+
