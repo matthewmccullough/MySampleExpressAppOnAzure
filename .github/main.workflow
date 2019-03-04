@@ -58,7 +58,7 @@ action "Azure Login" {
   args = "--name octodemo.azurecr.io"
 }
 
-action "Azure Regsitry Login" {
+action "Azure Regisitry Login" {
   uses = "actions/docker/login@master"
   needs = ["Azure Login"]
   env = {
@@ -72,11 +72,11 @@ action "Azure Regsitry Login" {
 
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Azure Regsitry Login"]
+  needs = ["Azure Regisitry Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
-action "Create WebApp" {
+action "Create Azure WebApp" {
   uses = "Azure/github-actions/cli@master"
   needs = ["Push Docker Image"]
   env = {
@@ -94,11 +94,10 @@ action "Deploy to Azure WebappContainer" {
     "DOCKER_PASSWORD",
     "DOCKER_USERNAME",
   ]
-  needs = ["Create WebApp"]
+  needs = ["Create Azure WebApp"]
   env = {
     AZURE_APP_NAME = "mysampleexpressapp-actions"
     CONTAINER_IMAGE_NAME = "$(octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA)"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
-  needs = ["Push Docker Image"]
 }
