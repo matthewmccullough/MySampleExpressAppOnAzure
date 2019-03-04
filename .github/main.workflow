@@ -1,7 +1,7 @@
 workflow "Continuous Integration" {
   on = "push"
   resolves = [
-    "Test"
+    "Test",
   ]
 }
 
@@ -97,7 +97,7 @@ action "Deploy to Azure WebappContainer" {
   needs = ["Create Azure WebApp"]
   env = {
     AZURE_APP_NAME = "mysampleexpressapp-actions"
-    CONTAINER_IMAGE_NAME = "$(octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA)"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+    CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
   }
 }
