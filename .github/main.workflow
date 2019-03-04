@@ -1,6 +1,6 @@
 workflow "Continuous Integration" {
   on = "push"
-  resolves = ["Test", "Build Docker Image"]
+  resolves = ["Test", "Azure Login"]
 }
 
 action "Install" {
@@ -32,7 +32,7 @@ action "Generate doc" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Build Docker Image"]
+  resolves = ["Azure Login"]
 }
 
 action "Env is Test" {
@@ -43,4 +43,13 @@ action "Env is Test" {
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
   args = "build -t octodemo/mysampleexpressappazure:$GITHUB_SHA -t octodemo/mysampleexpressappazure-$GITHUB_REF ."
+}
+
+action "Azure Login" {
+  uses = "Azure/github-actions/login@master"
+  needs = ["Build Docker Image"]
+  env = {
+    AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
+  }
+  secrets = ["AZURE_SERVICE_APP_ID", "AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_TENANT"]
 }
