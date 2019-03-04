@@ -99,6 +99,6 @@ action "Deploy to Azure WebappContainer" {
     AZURE_APP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
-    CONTAINER_IMAGE_TAG = "$GITHUB_SHA"
   }
+  runs = "CONTAINER_IMAGE_TAG=$GITHUB_SHA && entrypoint.sh"
 }
