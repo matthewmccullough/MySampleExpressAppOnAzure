@@ -32,7 +32,7 @@ action "Generate doc" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["GitHub Action for Docker"]
+  resolves = ["Build Docker Image"]
 }
 
 action "Env is Test" {
