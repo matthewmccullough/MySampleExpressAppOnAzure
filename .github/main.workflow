@@ -63,10 +63,11 @@ action "Azure Regsitry Login" {
   needs = ["Azure Login"]
   env = {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
-    DOCKER_PASSWORD = "$AZURE_SERVICE_PASSWORD"
-    DOCKER_USERNAME = "$AZURE_SERVICE_APP_ID"
   }
-  secrets = ["AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_APP_ID"]
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
+  ]
 }
 
 action "Push Docker Image" {
