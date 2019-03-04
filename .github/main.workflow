@@ -76,16 +76,29 @@ action "Push Docker Image" {
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
-action "Deploy to Azure WebappContainer" {
-  uses = "Azure/github-actions/containerwebapp@master"
-  secrets = ["DOCKER_PASSWORD", 
-            "DOCKER_USERNAME",]
+action "Create WebApp" {
+  uses = "Azure/github-actions/cli@master"
   needs = ["Push Docker Image"]
   env = {
-    AZURE_APP_NAME = "mysampleexpressappazure"
-    CONTAINER_IMAGE_NAME = "$(octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA)" 
-    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+    RESOURCE_GROUP = "github-octodemo"
+    APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    CONTAINER_IMAGE_NAME = "mysampleexpressappazure:91c0e7457eba5eb31519f9eef42e26f52431eefe"
+    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME --deployment-container-image-name $CONTAINER_IMAGE_NAME --output json > $HOME/azure_webapp_creation.json"
   }
-   needs = ["Push Docker Image"]
 }
 
+action "Deploy to Azure WebappContainer" {
+  uses = "Azure/github-actions/containerwebapp@master"
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
+  ]
+  needs = ["Create WebApp"]
+  env = {
+    AZURE_APP_NAME = "mysampleexpressapp-actions"
+    CONTAINER_IMAGE_NAME = "$(octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA)"
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+  }
+  needs = ["Push Docker Image"]
+}
