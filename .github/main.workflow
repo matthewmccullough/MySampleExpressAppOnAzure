@@ -84,7 +84,7 @@ action "Create Azure WebApp" {
     APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
     WEBAPP_NAME = "mysampleexpressapp-actions"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
-    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME --deployment-container-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --output json > $HOME/azure_webapp_creation.json"
+    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --deployment-container-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --output json > $HOME/azure_webapp_creation.json"
   }
 }
 
