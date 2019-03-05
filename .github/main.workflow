@@ -1,6 +1,8 @@
 workflow "Continuous Integration" {
   on = "push"
-  resolves = ["Test"]
+  resolves = [
+    "Test",
+  ]
 }
 
 action "Install" {
@@ -32,118 +34,80 @@ action "Generate doc" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Update Deploy Status for Test"]
+  resolves = ["Update deployment status"]
 }
 
 action "Env is Test" {
   uses = "actions/bin/filter@master"
   args = "environment test"
-  needs = ["Debug"]
 }
 
-action "Deploy to Zeit Test" {
-  uses = "actions/zeit-now@master"
-  secrets = ["ZEIT_TOKEN"]
-  args = "--public -n mysampleexpressapp-test -m test=true -m ref=$GITHUB_REF > $HOME/zeit-test.out"
+action "Build Docker Image" {
+  uses = "actions/docker/cli@master"
   needs = ["Env is Test"]
+  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
 }
 
-action "Update Deploy Status for Test" {
-  uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Zeit Test"]
-  secrets = ["GITHUB_TOKEN"]
-  args = "cat /github/home/zeit-test.out"
+action "Azure Login" {
+  uses = "Azure/github-actions/login@master"
+  needs = ["Build Docker Image"]
+  env = {
+    AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
+  }
+  secrets = ["AZURE_SERVICE_APP_ID", "AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_TENANT"]
+  args = "--name octodemo.azurecr.io"
 }
 
-workflow "Deploy to Staging" {
-  on = "deployment"
-  resolves = [
-    "Update Deploy Status for Staging",
+action "Azure Regisitry Login" {
+  uses = "actions/docker/login@master"
+  needs = ["Azure Login"]
+  env = {
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+  }
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
   ]
 }
 
-action "Staging Deployment" {
-  uses = "actions/bin/filter@master"
-  args = "environment staging"
+action "Push Docker Image" {
+  uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
+  needs = ["Azure Regisitry Login"]
+  args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
-action "Deploy to Zeit Staging" {
-  uses = "actions/zeit-now@master"
-  needs = ["Staging Deployment"]
-  args = "--public -n mysampleexpressapp-staging -m PR=$GITHUB_REF > $HOME/zeit-staging.out"
-  secrets = ["ZEIT_TOKEN"]
+action "Create Azure WebApp" {
+  uses = "Azure/github-actions/cli@master"
+  needs = ["Push Docker Image"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
+    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME --deployment-container-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --output json > $HOME/azure_webapp_creation.json"
+  }
 }
 
-action "Update Deploy Status for Staging" {
-  uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Zeit Staging"]
-  secrets = ["GITHUB_TOKEN"]
-  args = "cat /github/home/zeit-staging.out"
-}
-
-workflow "Deploy to Production" {
-  on = "deployment"
-  resolves = [
-    "Clean up Zeit Production",
+action "Deploy to Azure WebappContainer" {
+  uses = "Azure/github-actions/cli@master"
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
+    "AZURE_SUBSCRIPTION_ID",
   ]
+  needs = ["Create Azure WebApp"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
+    DOCKER_REGISTRY_URL = "https://octodemo.azurecr.io"
+    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
+  }
 }
 
-action "Production Deployment" {
-  uses = "actions/bin/filter@master"
-  args = "environment production"
-}
-
-action "Deploy to Zeit Production" {
-  uses = "actions/zeit-now@master"
-  needs = ["Production Deployment"]
-  args = "--public -n mysampleexpressapp-production -m PR=$GITHUB_REF > $HOME/zeit-production.out"
-  secrets = ["ZEIT_TOKEN"]
-}
-
-action "Alias Zeit Production" {
-  needs = ["Deploy to Zeit Production"]
-  uses = "actions/zeit-now@master"
-  args = "alias `cat $HOME/zeit-production.out` https://mysampleexpressapp-prod.now.sh"
-  secrets = ["ZEIT_TOKEN"]
-}
-
-action "Update Deploy Status for Production" {
+action "Update deployment status" {
   uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Alias Zeit Production"]
+  needs = ["Deploy to Azure WebappContainer"]
   secrets = ["GITHUB_TOKEN"]
-  args = "echo 'https://mysampleexpressapp-prod.now.sh'"
-}
-
-action "Clean up Zeit Production" {
-  needs = ["Update Deploy Status for Production"]
-  uses = "actions/zeit-now@master"
-  args = "rm mysampleexpressapp-production --safe --yes"
-  secrets = ["ZEIT_TOKEN"]
-}
-
-workflow "Cleanup envs" {
-  on = "pull_request"
-  resolves = ["debug zeit output"]
-}
-
-action "Debug" {
-  uses = "hmarr/debug-action@master"
-}
-
-action "Filters for closed PRs" {
-  uses = "actions/bin/filter@master"
-  args = "action closed"
-}
-
-action "List instances" {
-  uses = "actions/zeit-now@master"
-  needs = ["Filters for closed PRs"]
-  args = "ls -m ref=$GITHUB_REF > $HOME/zeit_instances.out"
-  secrets = ["ZEIT_TOKEN"]
-}
-
-action "debug zeit output" {
-  uses = "helaili/debug-action@9c691e6c7ca1c8dd6fce3e7fbb7edbccf93bcc32"
-  needs = ["List instances"]
-  args = "$HOME/zeit_instances.out"
+  args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
