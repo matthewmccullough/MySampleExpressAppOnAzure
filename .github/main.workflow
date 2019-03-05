@@ -104,3 +104,10 @@ action "Deploy to Azure WebappContainer" {
     AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
   }
 }
+
+action "Update deployment status" {
+  uses = "./actions/DeployStatusUpdateAction"
+  needs = ["Deploy to Azure WebappContainer"]
+  secrets = ["GITHUB_TOKEN"]
+  args = "https://mysampleexpressapp-actions.azurewebsites.net/"
+}
