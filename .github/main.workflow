@@ -1,7 +1,7 @@
 workflow "Continuous Integration" {
   on = "push"
   resolves = [
-    "Test"
+    "Test",
   ]
 }
 
@@ -100,5 +100,5 @@ action "Deploy to Azure WebappContainer" {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
   }
-  runs = "sh -c export CONTAINER_IMAGE_TAG=$GITHUB_SHA && /entrypoint.sh"
+  runs = "CONTAINER_IMAGE_TAG=$GITHUB_SHA && /entrypoint.sh"
 }
