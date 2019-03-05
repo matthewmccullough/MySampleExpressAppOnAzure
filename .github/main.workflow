@@ -130,9 +130,9 @@ action "Filter closed PRs" {
 }
 
 action "Deployments" {
-  uses = "swinton/httpie.action@8ab0a0e926d091e0444fcacd5eb679d2e2d4ab3d"
+  uses = "swinton/httpie.action@master"
   needs = ["Filter closed PRs"]
-  args = ["--auth-type=jwt", "--auth=$GITHUB_TOKEN", "POST", "api.github.com/repos/$GITHUB_REPOSITORY/deployments", "ref=$(echo $GITHUB_REF  | sed -r 's/refs\/heads\/(.*)/\1/')"]
+  args = ["--auth-type=jwt", "--auth=$GITHUB_TOKEN", "POST", "api.github.com/repos/$GITHUB_REPOSITORY/deployments", "ref=$(echo $GITHUB_REF  | sed -r 's/refs\\/heads\\/(.*)/\\1/')"]
   secrets = ["GITHUB_TOKEN"]
 }
 
