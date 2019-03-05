@@ -109,5 +109,5 @@ action "Update deployment status" {
   uses = "./actions/DeployStatusUpdateAction"
   needs = ["Deploy to Azure WebappContainer"]
   secrets = ["GITHUB_TOKEN"]
-  args = "https://mysampleexpressapp-actions.azurewebsites.net/"
+  args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
