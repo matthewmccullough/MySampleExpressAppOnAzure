@@ -111,3 +111,33 @@ action "Update deployment status" {
   secrets = ["GITHUB_TOKEN"]
   args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
+
+workflow "Clean up" {
+  on = "pull_request"
+  resolves = [
+    "Debug",
+    "Debug Deployments",
+  ]
+}
+
+action "Debug" {
+  uses = "hmarr/debug-action@master"
+}
+
+action "Filter closed PRs" {
+  uses = "actions/bin/filter@master"
+  args = "action closed"
+}
+
+action "Deployments" {
+  uses = "swinton/httpie.action@8ab0a0e926d091e0444fcacd5eb679d2e2d4ab3d"
+  needs = ["Filter closed PRs"]
+  args = ["--auth-type=jwt", "--auth=$GITHUB_TOKEN", "POST", "api.github.com/repos/$GITHUB_REPOSITORY/deployments", "ref=$(echo $GITHUB_REF  | sed -r 's/refs\/heads\/(.*)/\1/')"]
+  secrets = ["GITHUB_TOKEN"]
+}
+
+action "Debug Deployments" {
+  uses = "helaili/debug-action@9c691e6c7ca1c8dd6fce3e7fbb7edbccf93bcc32"
+  needs = ["Deployments"]
+  args = "$HOME/Deployments.response.body"
+}
