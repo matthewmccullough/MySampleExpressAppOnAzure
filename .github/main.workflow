@@ -34,7 +34,7 @@ action "Generate doc" {
 
 workflow "Deploy to Test" {
   on = "deployment"
-  resolves = ["Deploy to Azure WebappContainer"]
+  resolves = ["Update deployment status"]
 }
 
 action "Env is Test" {
