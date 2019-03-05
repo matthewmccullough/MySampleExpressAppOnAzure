@@ -101,7 +101,7 @@ action "Deploy to Azure WebappContainer" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
     DOCKER_REGISTRY_URL = "https://octodemo.azurecr.io"
-    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
+    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
   }
 }
 
