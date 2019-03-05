@@ -137,7 +137,7 @@ action "Deployments" {
 }
 
 action "Debug Deployments" {
-  uses = "helaili/debug-action@9c691e6c7ca1c8dd6fce3e7fbb7edbccf93bcc32"
+  uses = "helaili/debug-action@master"
   needs = ["Deployments"]
   args = "$HOME/Deployments.response.body"
 }
