@@ -128,7 +128,7 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Deletes Webapps",
+    "Delete Webapps",
   ]
 }
 
