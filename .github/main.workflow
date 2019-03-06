@@ -42,15 +42,9 @@ action "Env is Test" {
   args = "environment test"
 }
 
-action "Build Docker Image" {
-  uses = "actions/docker/cli@master"
-  needs = ["Env is Test"]
-  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
-}
-
 action "Azure Login" {
   uses = "Azure/github-actions/login@master"
-  needs = ["Build Docker Image"]
+  needs = ["Env is Test"]
   env = {
     AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
   }
@@ -58,9 +52,9 @@ action "Azure Login" {
   args = "--name octodemo.azurecr.io"
 }
 
-action "Azure Regisitry Login" {
+action "Azure Registry Login" {
   uses = "actions/docker/login@master"
-  needs = ["Azure Login"]
+  needs = ["Env is Test"]
   env = {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
@@ -70,15 +64,21 @@ action "Azure Regisitry Login" {
   ]
 }
 
+action "Build Docker Image" {
+  uses = "actions/docker/cli@master"
+  needs = ["Env is Test"]
+  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
+}
+
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Azure Regisitry Login"]
+  needs = ["Build Docker Image", "Azure Registry Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
 action "Create Azure WebApp" {
   uses = "Azure/github-actions/cli@master"
-  needs = ["Push Docker Image"]
+  needs = ["Azure Login"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
@@ -95,7 +95,7 @@ action "Deploy to Azure WebappContainer" {
     "DOCKER_USERNAME",
     "AZURE_SUBSCRIPTION_ID",
   ]
-  needs = ["Create Azure WebApp"]
+  needs = ["Create Azure WebApp", "Push Docker Image"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     WEBAPP_NAME = "mysampleexpressapp-actions"
@@ -105,9 +105,22 @@ action "Deploy to Azure WebappContainer" {
   }
 }
 
+action "Set Webapp Tags" {
+  uses = "Azure/github-actions/cli@master"
+  secrets = [
+    "AZURE_SUBSCRIPTION_ID",
+  ]
+  needs = ["Create Azure WebApp"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    AZURE_SCRIPT = "BRANCH=$(jq -r '.deployment.ref' $GITHUB_EVENT_PATH) && az webapp update -g $RESOURCE_GROUP -n $WEBAPP_NAME-${GITHUB_SHA:0:7} --set tags.branch=$BRANCH"
+  }
+}
+
 action "Update deployment status" {
   uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Azure WebappContainer"]
+  needs = ["Deploy to Azure WebappContainer", "Push Docker Image", "Set Webapp Tags"]
   secrets = ["GITHUB_TOKEN"]
   args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
