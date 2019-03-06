@@ -42,15 +42,9 @@ action "Env is Test" {
   args = "environment test"
 }
 
-action "Build Docker Image" {
-  uses = "actions/docker/cli@master"
-  needs = ["Env is Test"]
-  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
-}
-
 action "Azure Login" {
   uses = "Azure/github-actions/login@master"
-  needs = ["Build Docker Image"]
+  needs = ["Env is Test"]
   env = {
     AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
   }
@@ -70,9 +64,15 @@ action "Azure Regisitry Login" {
   ]
 }
 
+action "Build Docker Image" {
+  uses = "actions/docker/cli@master"
+  needs = ["Env is Test"]
+  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
+}
+
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Azure Regisitry Login"]
+  needs = ["Build Docker Image", "Azure Regisitry Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
