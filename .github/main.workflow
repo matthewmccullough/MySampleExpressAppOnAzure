@@ -128,13 +128,8 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Debug",
-    "Debug Deployments",
+    "Delete Webapps",
   ]
-}
-
-action "Debug" {
-  uses = "hmarr/debug-action@master"
 }
 
 action "Filter closed PRs" {
@@ -142,15 +137,36 @@ action "Filter closed PRs" {
   args = "action closed"
 }
 
-action "Deployments" {
-  uses = "swinton/httpie.action@master"
+action "Azure Login for Cleanup" {
+  uses = "Azure/github-actions/login@master"
   needs = ["Filter closed PRs"]
-  args = ["--auth-type=jwt", "--auth=$GITHUB_TOKEN", "POST", "api.github.com/repos/$GITHUB_REPOSITORY/deployments", "ref=$(echo $GITHUB_REF  | sed -r 's/refs\\/heads\\/(.*)/\\1/')"]
-  secrets = ["GITHUB_TOKEN"]
+  env = {
+    AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
+  }
+  secrets = ["AZURE_SERVICE_APP_ID", "AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_TENANT"]
+  args = "--name octodemo.azurecr.io"
 }
 
-action "Debug Deployments" {
-  uses = "helaili/debug-action@master"
-  needs = ["Deployments"]
-  args = "$HOME/Deployments.response.body"
+action "Get Webapp List" {
+  uses = "Azure/github-actions/cli@master"
+  secrets = [
+    "AZURE_SUBSCRIPTION_ID",
+  ]
+  needs = ["Azure Login for Cleanup"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    AZURE_SCRIPT = "BRANCH=$(jq -r '.pull_request.head.ref' $GITHUB_EVENT_PATH) && az webapp list --resource-group $RESOURCE_GROUP --query \"[?tags.branch==$BRANCH]\" > $HOME/webapp-list.json"
+  }
+}
+
+action "Delete Webapps" {
+  uses = "Azure/github-actions/cli@master"
+  secrets = [
+    "AZURE_SUBSCRIPTION_ID",
+  ]
+  needs = ["Get Webapp List"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].resourceGroup' $HOME/webapp-list.json) && az webapp delete --ids $WEBAPP_ID_LIST"
+  }
 }
