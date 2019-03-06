@@ -156,7 +156,7 @@ action "Get Webapp List" {
   needs = ["Azure Login for Cleanup"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
-    AZURE_SCRIPT = "BRANCH=$(jq -r '.pull_request.head.ref' $GITHUB_EVENT_PATH) && echo $BRANCH && az webapp list --resource-group $RESOURCE_GROUP --query \"[?tags.branch==$BRANCH]\" > $HOME/webapp-list.json"
+    AZURE_SCRIPT = "BRANCH=$(jq -r '.pull_request.head.ref' $GITHUB_EVENT_PATH) && echo $BRANCH && az webapp list --resource-group $RESOURCE_GROUP --query \"[?tags.branch=='$BRANCH']\" > $HOME/webapp-list.json"
   }
 }
 
@@ -168,7 +168,7 @@ action "Delete Webapps" {
   needs = ["Get Webapp List"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
-    AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].id' $HOME/webapp-list.json) && echo $WEBAPP_ID_LIST"
+    AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].id+\" \"' $HOME/webapp-list.json) && echo $WEBAPP_ID_LIST"
   }
 }
 
