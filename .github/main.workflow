@@ -105,9 +105,22 @@ action "Deploy to Azure WebappContainer" {
   }
 }
 
+action "Set Webapp Tags" {
+  uses = "Azure/github-actions/cli@master"
+  secrets = [
+    "AZURE_SUBSCRIPTION_ID",
+  ]
+  needs = ["Create Azure WebApp"]
+  env = {
+    RESOURCE_GROUP = "github-octodemo"
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    AZURE_SCRIPT = "az webapp update -g $RESOURCE_GROUP -n $WEBAPP_NAME-${GITHUB_SHA:0:7} --set tags.ref=$GITHUB_REF"
+  }
+}
+
 action "Update deployment status" {
   uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Azure WebappContainer"]
+  needs = ["Deploy to Azure WebappContainer", "Set Webapp Tags"]
   secrets = ["GITHUB_TOKEN"]
   args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
