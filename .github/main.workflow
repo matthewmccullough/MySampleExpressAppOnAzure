@@ -72,13 +72,13 @@ action "Build Docker Image" {
 
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Build Docker Image", "Azure Registry Login", "Azure Login"]
+  needs = ["Build Docker Image", "Azure Registry Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
 action "Create Azure WebApp" {
   uses = "Azure/github-actions/cli@master"
-  needs = ["Push Docker Image"]
+  needs = ["Azure Login"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
@@ -95,7 +95,7 @@ action "Deploy to Azure WebappContainer" {
     "DOCKER_USERNAME",
     "AZURE_SUBSCRIPTION_ID",
   ]
-  needs = ["Create Azure WebApp"]
+  needs = ["Create Azure WebApp", "Push Docker Image"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     WEBAPP_NAME = "mysampleexpressapp-actions"
@@ -120,7 +120,7 @@ action "Set Webapp Tags" {
 
 action "Update deployment status" {
   uses = "./actions/DeployStatusUpdateAction"
-  needs = ["Deploy to Azure WebappContainer", "Set Webapp Tags"]
+  needs = ["Deploy to Azure WebappContainer", "Push Docker Image", "Set Webapp Tags"]
   secrets = ["GITHUB_TOKEN"]
   args = "jq -r '\"https://\\(.defaultHostName)\"' $HOME/azure_webapp_creation.json"
 }
