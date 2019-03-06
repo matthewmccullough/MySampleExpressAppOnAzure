@@ -129,6 +129,7 @@ workflow "Clean up" {
   on = "pull_request"
   resolves = [
     "Delete Webapps",
+    "Debug list"
   ]
 }
 
@@ -167,6 +168,13 @@ action "Delete Webapps" {
   needs = ["Get Webapp List"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
-    AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].resourceGroup' $HOME/webapp-list.json) && az webapp delete --ids $WEBAPP_ID_LIST"
+    AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].id' $HOME/webapp-list.json) && az webapp delete --ids $WEBAPP_ID_LIST"
   }
+}
+
+
+action "Debug list" {
+  uses = "helaili/debug-action@master"
+  needs = ["Get Webapp List"]
+  args = "$HOME/webapp-list.json"
 }
