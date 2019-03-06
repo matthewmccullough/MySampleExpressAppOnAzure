@@ -114,7 +114,8 @@ action "Set Webapp Tags" {
   env = {
     RESOURCE_GROUP = "github-octodemo"
     WEBAPP_NAME = "mysampleexpressapp-actions"
-    AZURE_SCRIPT = "az webapp update -g $RESOURCE_GROUP -n $WEBAPP_NAME-${GITHUB_SHA:0:7} --set tags.ref=$GITHUB_REF"
+    AZURE_SCRIPT = "az webapp update -g $RESOURCE_GROUP -n $WEBAPP_NAME-${GITHUB_SHA:0:7} --set tags.branch=$BRANCH"
+    BRANCH = "jq -r '.deployment.ref' $GITHUB_EVENT_PATH"
   }
 }
 
