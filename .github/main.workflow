@@ -52,9 +52,9 @@ action "Azure Login" {
   args = "--name octodemo.azurecr.io"
 }
 
-action "Azure Regisitry Login" {
+action "Azure Registry Login" {
   uses = "actions/docker/login@master"
-  needs = ["Azure Login"]
+  needs = ["Env is Test"]
   env = {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
@@ -72,7 +72,7 @@ action "Build Docker Image" {
 
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Build Docker Image", "Azure Regisitry Login"]
+  needs = ["Build Docker Image", "Azure Registry Login", "Azure Login"]
   args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
 }
 
