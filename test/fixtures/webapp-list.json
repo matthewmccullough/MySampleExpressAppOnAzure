@@ -1,0 +1,218 @@
+[
+  {
+    "appServicePlanId": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/serverfarms/github-octodemo-app-service-plan",
+    "availabilityState": "Normal",
+    "clientAffinityEnabled": true,
+    "clientCertEnabled": false,
+    "cloningInfo": null,
+    "containerSize": 0,
+    "dailyMemoryTimeQuota": 0,
+    "defaultHostName": "mysampleexpressapp-actions-a04ae33.azurewebsites.net",
+    "enabled": true,
+    "enabledHostNames": [
+      "mysampleexpressapp-actions-a04ae33.azurewebsites.net",
+      "mysampleexpressapp-actions-a04ae33.scm.azurewebsites.net"
+    ],
+    "hostNameSslStates": [
+      {
+        "hostType": "Standard",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-a04ae33.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      },
+      {
+        "hostType": "Repository",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-a04ae33.scm.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      }
+    ],
+    "hostNames": [
+      "mysampleexpressapp-actions-a04ae33.azurewebsites.net"
+    ],
+    "hostNamesDisabled": false,
+    "hostingEnvironmentProfile": null,
+    "httpsOnly": false,
+    "hyperV": false,
+    "id": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/sites/mysampleexpressapp-actions-a04ae33",
+    "identity": null,
+    "isDefaultContainer": null,
+    "isXenon": false,
+    "kind": "app,linux,container",
+    "lastModifiedTimeUtc": "2019-03-06T11:34:32.210000",
+    "location": "West Europe",
+    "maxNumberOfWorkers": null,
+    "name": "mysampleexpressapp-actions-a04ae33",
+    "outboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106",
+    "possibleOutboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106,51.144.3.140,51.145.152.217",
+    "repositorySiteName": "mysampleexpressapp-actions-a04ae33",
+    "reserved": true,
+    "resourceGroup": "github-octodemo",
+    "scmSiteAlsoStopped": false,
+    "siteConfig": null,
+    "slotSwapStatus": null,
+    "state": "Running",
+    "suspendedTill": null,
+    "tags": {
+      "branch": "reorg-deploy-flow"
+    },
+    "targetSwapSlot": null,
+    "trafficManagerHostNames": null,
+    "type": "Microsoft.Web/sites",
+    "usageState": "Normal"
+  },
+  {
+    "appServicePlanId": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/serverfarms/github-octodemo-app-service-plan",
+    "availabilityState": "Normal",
+    "clientAffinityEnabled": true,
+    "clientCertEnabled": false,
+    "cloningInfo": null,
+    "containerSize": 0,
+    "dailyMemoryTimeQuota": 0,
+    "defaultHostName": "mysampleexpressapp-actions-ab943c7.azurewebsites.net",
+    "enabled": true,
+    "enabledHostNames": [
+      "mysampleexpressapp-actions-ab943c7.azurewebsites.net",
+      "mysampleexpressapp-actions-ab943c7.scm.azurewebsites.net"
+    ],
+    "hostNameSslStates": [
+      {
+        "hostType": "Standard",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-ab943c7.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      },
+      {
+        "hostType": "Repository",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-ab943c7.scm.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      }
+    ],
+    "hostNames": [
+      "mysampleexpressapp-actions-ab943c7.azurewebsites.net"
+    ],
+    "hostNamesDisabled": false,
+    "hostingEnvironmentProfile": null,
+    "httpsOnly": false,
+    "hyperV": false,
+    "id": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/sites/mysampleexpressapp-actions-ab943c7",
+    "identity": null,
+    "isDefaultContainer": null,
+    "isXenon": false,
+    "kind": "app,linux,container",
+    "lastModifiedTimeUtc": "2019-03-06T13:56:46.313333",
+    "location": "West Europe",
+    "maxNumberOfWorkers": null,
+    "name": "mysampleexpressapp-actions-ab943c7",
+    "outboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106",
+    "possibleOutboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106,51.144.3.140,51.145.152.217",
+    "repositorySiteName": "mysampleexpressapp-actions-ab943c7",
+    "reserved": true,
+    "resourceGroup": "github-octodemo",
+    "scmSiteAlsoStopped": false,
+    "siteConfig": null,
+    "slotSwapStatus": null,
+    "state": "Running",
+    "suspendedTill": null,
+    "tags": {
+      "branch": "reorg-deploy-flow"
+    },
+    "targetSwapSlot": null,
+    "trafficManagerHostNames": null,
+    "type": "Microsoft.Web/sites",
+    "usageState": "Normal"
+  },
+  {
+    "appServicePlanId": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/serverfarms/github-octodemo-app-service-plan",
+    "availabilityState": "Normal",
+    "clientAffinityEnabled": true,
+    "clientCertEnabled": false,
+    "cloningInfo": null,
+    "containerSize": 0,
+    "dailyMemoryTimeQuota": 0,
+    "defaultHostName": "mysampleexpressapp-actions-328d179.azurewebsites.net",
+    "enabled": true,
+    "enabledHostNames": [
+      "mysampleexpressapp-actions-328d179.azurewebsites.net",
+      "mysampleexpressapp-actions-328d179.scm.azurewebsites.net"
+    ],
+    "hostNameSslStates": [
+      {
+        "hostType": "Standard",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-328d179.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      },
+      {
+        "hostType": "Repository",
+        "ipBasedSslResult": null,
+        "ipBasedSslState": "NotConfigured",
+        "name": "mysampleexpressapp-actions-328d179.scm.azurewebsites.net",
+        "sslState": "Disabled",
+        "thumbprint": null,
+        "toUpdate": null,
+        "toUpdateIpBasedSsl": null,
+        "virtualIp": null
+      }
+    ],
+    "hostNames": [
+      "mysampleexpressapp-actions-328d179.azurewebsites.net"
+    ],
+    "hostNamesDisabled": false,
+    "hostingEnvironmentProfile": null,
+    "httpsOnly": false,
+    "hyperV": false,
+    "id": "/subscriptions/282bf220-8943-485c-abaf-187252d34b78/resourceGroups/github-octodemo/providers/Microsoft.Web/sites/mysampleexpressapp-actions-328d179",
+    "identity": null,
+    "isDefaultContainer": null,
+    "isXenon": false,
+    "kind": "app,linux,container",
+    "lastModifiedTimeUtc": "2019-03-06T13:49:41.403333",
+    "location": "West Europe",
+    "maxNumberOfWorkers": null,
+    "name": "mysampleexpressapp-actions-328d179",
+    "outboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106",
+    "possibleOutboundIpAddresses": "52.178.79.163,51.136.23.153,40.68.112.57,40.68.116.140,13.95.22.106,51.144.3.140,51.145.152.217",
+    "repositorySiteName": "mysampleexpressapp-actions-328d179",
+    "reserved": true,
+    "resourceGroup": "github-octodemo",
+    "scmSiteAlsoStopped": false,
+    "siteConfig": null,
+    "slotSwapStatus": null,
+    "state": "Running",
+    "suspendedTill": null,
+    "tags": {
+      "branch": "reorg-deploy-flow"
+    },
+    "targetSwapSlot": null,
+    "trafficManagerHostNames": null,
+    "type": "Microsoft.Web/sites",
+    "usageState": "Normal"
+  }
+]
