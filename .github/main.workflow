@@ -67,13 +67,13 @@ action "Azure Registry Login" {
 action "Build Docker Image" {
   uses = "actions/docker/cli@master"
   needs = ["Env is Test"]
-  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA -t octodemo.azurecr.io/mysampleexpressappazure-$GITHUB_REF ."
+  args = "build -t octodemo.azurecr.io/mysampleexpressappazure:${GITHUB_SHA:0:7} ."
 }
 
 action "Push Docker Image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
   needs = ["Build Docker Image", "Azure Registry Login"]
-  args = "push octodemo.azurecr.io/mysampleexpressappazure:$GITHUB_SHA"
+  args = "push octodemo.azurecr.io/mysampleexpressappazure:${GITHUB_SHA:0:7}"
 }
 
 action "Create Azure WebApp" {
@@ -84,7 +84,7 @@ action "Create Azure WebApp" {
     APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
     WEBAPP_NAME = "mysampleexpressapp-actions"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
-    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --deployment-container-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --output json > $HOME/azure_webapp_creation.json"
+    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --deployment-container-image-name $CONTAINER_IMAGE_NAME:${GITHUB_SHA:0:7} --output json > $HOME/azure_webapp_creation.json"
   }
 }
 
@@ -101,7 +101,7 @@ action "Deploy to Azure WebappContainer" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     CONTAINER_IMAGE_NAME = "octodemo.azurecr.io/mysampleexpressappazure"
     DOCKER_REGISTRY_URL = "https://octodemo.azurecr.io"
-    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:$GITHUB_SHA --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
+    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name $CONTAINER_IMAGE_NAME:${GITHUB_SHA:0:7} --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
   }
 }
 
