@@ -196,16 +196,16 @@ action "Generate Container List" {
   uses = "helaili/jq-action@master"
   needs = ["Get Webapp List"]
   env = {
+    WEBAPP_NAME = "mysampleexpressapp-actions"
     OUTPUT_FILE = "$HOME/container-list.json"
   }
-  args = "-j '.[].defaultHostName | match(\"$WEBAPP_NAME-(.*).azurewebsites.net\") | \"$WEBAPP_NAME:\"+.captures[].string+ \" \"' $HOME/webapp-list.json"
+  args = "-j '.[].defaultHostName | match(env.WEBAPP_NAME + \"-(.*).azurewebsites.net\") | env.WEBAPP_NAME + \":\" + .captures[].string+ \" \"' $GITHUB_EVENT_PATH"
 }
 
 action "Delete Containers" {
   uses = "actions/docker/cli@master"
   needs = ["Delete Webapps", "Azure Registry Login for Cleanup", "Generate Container List"]
   env = {
-    WEBAPP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
   args = "rm $(cat $HOME/container-list.json)"
