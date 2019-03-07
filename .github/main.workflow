@@ -198,7 +198,7 @@ action "Generate Container List" {
   env = {
     OUTPUT_FILE = "$HOME/container-list.json"
   }
-  args = "-j '.[].defaultHostName | match(\"${WEBAPP_NAME}-(.*).azurewebsites.net\") | \"${WEBAPP_NAME}:\"+.captures[].string+ \" \"' $HOME/webapp-list.json"
+  args = "-j '.[].defaultHostName | match(\"$WEBAPP_NAME-(.*).azurewebsites.net\") | \"$WEBAPP_NAME:\"+.captures[].string+ \" \"' $HOME/webapp-list.json"
 }
 
 action "Delete Containers" {
