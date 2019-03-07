@@ -199,7 +199,7 @@ action "Generate Container List" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     OUTPUT_FILE = "$HOME/container-list.json"
   }
-  args = "-j '.[].defaultHostName | match(env.WEBAPP_NAME + \"-(.*).azurewebsites.net\") | env.WEBAPP_NAME + \":\" + .captures[].string+ \" \"' $GITHUB_EVENT_PATH"
+  args = "-j '.[].defaultHostName | match(env.WEBAPP_NAME + \"-(.*).azurewebsites.net\") | env.WEBAPP_NAME + \":\" + .captures[].string+ \" \"' $HOME/webapp-list.json"
 }
 
 action "Delete Containers" {
