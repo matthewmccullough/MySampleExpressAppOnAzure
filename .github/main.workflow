@@ -136,8 +136,8 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Delete Webapps",
-    "Debug list"
+    "Delete Containers",
+    "Debug list",
   ]
 }
 
@@ -180,6 +180,27 @@ action "Delete Webapps" {
   }
 }
 
+action "Azure Registry Login for Cleanup" {
+  uses = "actions/docker/login@master"
+  needs = ["Filter closed PRs"]
+  env = {
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+  }
+  secrets = [
+    "DOCKER_PASSWORD",
+    "DOCKER_USERNAME",
+  ]
+}
+
+action "Delete Containers" {
+  uses = "actions/docker/cli@master"
+  needs = ["Delete Webapps", "Azure Registry Login for Cleanup"]
+  env = {
+    WEBAPP_NAME = "mysampleexpressapp-actions"
+    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
+  }
+  args = "rm $(jq -j '.[].defaultHostName | match(\"${WEBAPP_NAME}-(.*).azurewebsites.net\") | \"${WEBAPP_NAME}:\"+.captures[].string+ \" \"' $HOME/webapp-list.json)"
+}
 
 action "Debug list" {
   uses = "helaili/debug-action@master"
