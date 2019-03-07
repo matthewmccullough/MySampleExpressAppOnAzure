@@ -214,5 +214,5 @@ action "Delete Containers" {
 action "Debug list" {
   uses = "helaili/debug-action@master"
   needs = ["Generate Container List"]
-  args = "$HOME/container-list"
+  args = "$HOME/container-list.json"
 }
