@@ -170,7 +170,7 @@ action "Get Webapp List" {
 action "Test Webapp List empty" {
   uses = "actions/bin/sh@master"
   needs = ["Get Webapp List"]
-  args = ["filesize=$(wc -c < $HOME/webapp-list.json); echo $filesize; if [ \"$filesize\" -eq 0 ]; then exit 78; else exit 0; fi"]
+  args = ["filesize=$(wc -c < $HOME/webapp-list.json); echo $filesize; if [ \"$filesize\" -eq 3 ]; then exit 78; else exit 0; fi"]
 }
 
 
