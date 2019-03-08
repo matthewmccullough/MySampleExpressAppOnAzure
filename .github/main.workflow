@@ -167,12 +167,19 @@ action "Get Webapp List" {
   }
 }
 
+action "Test Webapp List empty" {
+  uses = "actions/bin/sh@master"
+  needs = ["Get Webapp List"]
+  args = ["filesize=$(wc -c < $HOME/webapp-list.json); if [ \"$filesize\" -eq 0 ]; then exit 78; else exit 0; fi"]
+}
+
+
 action "Delete Webapps" {
   uses = "Azure/github-actions/cli@master"
   secrets = [
     "AZURE_SUBSCRIPTION_ID",
   ]
-  needs = ["Get Webapp List"]
+  needs = ["Test Webapp List empty"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].id+\" \"' $HOME/webapp-list.json) && az webapp delete --ids $WEBAPP_ID_LIST"
@@ -181,7 +188,7 @@ action "Delete Webapps" {
 
 action "Azure Registry Login for Cleanup" {
   uses = "actions/docker/login@master"
-  needs = ["Filter closed PRs"]
+  needs = ["Test Webapp List empty"]
   env = {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
