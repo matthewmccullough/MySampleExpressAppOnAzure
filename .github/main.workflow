@@ -136,8 +136,7 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Delete Containers",
-    "Debug list",
+    "Delete Docker Repository"
   ]
 }
 
@@ -192,27 +191,11 @@ action "Azure Registry Login for Cleanup" {
   ]
 }
 
-action "Generate Container List" {
-  uses = "helaili/jq-action@master"
-  needs = ["Get Webapp List"]
+action "Delete Docker Repository" {
+  uses = "Azure/github-actions/cli@master"
+  needs = ["Delete Webapps", "Azure Registry Login for Cleanup"]
   env = {
     WEBAPP_NAME = "mysampleexpressapp-actions"
-    OUTPUT_FILE = "$HOME/container-list.json"
+    AZURE_SCRIPT = "az acr repository delete --name octodemo --repository ${WEBAPP_NAME}/${GITHUB_REF:11} --yes"
   }
-  args = "-j '.[].defaultHostName | match(env.WEBAPP_NAME + \"-(.*).azurewebsites.net\") | env.WEBAPP_NAME + \":\" + .captures[].string+ \" \"' $HOME/webapp-list.json"
-}
-
-action "Delete Containers" {
-  uses = "actions/docker/cli@master"
-  needs = ["Delete Webapps", "Azure Registry Login for Cleanup", "Generate Container List"]
-  env = {
-    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
-  }
-  args = "rm $(cat $HOME/container-list.json)"
-}
-
-action "Debug list" {
-  uses = "helaili/debug-action@master"
-  needs = ["Generate Container List"]
-  args = "$HOME/container-list.json"
 }
