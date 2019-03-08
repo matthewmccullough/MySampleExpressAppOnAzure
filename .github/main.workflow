@@ -72,7 +72,7 @@ action "Build Docker Image" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
-  args = "build -t ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}:${GITHUB_SHA:0:7} ."
+  args = "build -t ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}/${GITHUB_REF:11}:${GITHUB_SHA:0:7} ."
 }
 
 action "Push Docker Image" {
@@ -82,7 +82,7 @@ action "Push Docker Image" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
-  args = "push ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}:${GITHUB_SHA:0:7}"
+  args = "push ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}/${GITHUB_REF:11}:${GITHUB_SHA:0:7}"
 }
 
 action "Create Azure WebApp" {
@@ -93,7 +93,7 @@ action "Create Azure WebApp" {
     APP_SERVICE_PLAN = "github-octodemo-app-service-plan"
     WEBAPP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
-    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --deployment-container-image-name ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}:${GITHUB_SHA:0:7} --output json > $HOME/azure_webapp_creation.json"
+    AZURE_SCRIPT = "az webapp create --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --deployment-container-image-name ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}/${GITHUB_REF:11}:${GITHUB_SHA:0:7} --output json > $HOME/azure_webapp_creation.json"
   }
 }
 
@@ -109,7 +109,7 @@ action "Deploy to Azure WebappContainer" {
     RESOURCE_GROUP = "github-octodemo"
     WEBAPP_NAME = "mysampleexpressapp-actions"
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
-    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}:${GITHUB_SHA:0:7} --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
+    AZURE_SCRIPT = "az webapp config container set --docker-custom-image-name ${DOCKER_REGISTRY_URL}/${WEBAPP_NAME}/${GITHUB_REF:11}:${GITHUB_SHA:0:7} --docker-registry-server-url $DOCKER_REGISTRY_URL --docker-registry-server-password $DOCKER_PASSWORD --docker-registry-server-user $DOCKER_USERNAME --name $WEBAPP_NAME-${GITHUB_SHA:0:7} --resource-group $RESOURCE_GROUP --subscription $AZURE_SUBSCRIPTION_ID"
   }
 }
 
@@ -136,8 +136,7 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Delete Containers",
-    "Debug list",
+    "Delete Docker Repository"
   ]
 }
 
@@ -192,27 +191,11 @@ action "Azure Registry Login for Cleanup" {
   ]
 }
 
-action "Generate Container List" {
-  uses = "helaili/jq-action@master"
-  needs = ["Get Webapp List"]
+action "Delete Docker Repository" {
+  uses = "Azure/github-actions/cli@master"
+  needs = ["Delete Webapps", "Azure Registry Login for Cleanup"]
   env = {
     WEBAPP_NAME = "mysampleexpressapp-actions"
-    OUTPUT_FILE = "$HOME/container-list.json"
+    AZURE_SCRIPT = "az acr repository delete --name octodemo --repository ${WEBAPP_NAME}/${GITHUB_REF:11} --yes"
   }
-  args = "-j '.[].defaultHostName | match(env.WEBAPP_NAME + \"-(.*).azurewebsites.net\") | env.WEBAPP_NAME + \":\" + .captures[].string+ \" \"' $HOME/webapp-list.json"
-}
-
-action "Delete Containers" {
-  uses = "actions/docker/cli@master"
-  needs = ["Delete Webapps", "Azure Registry Login for Cleanup", "Generate Container List"]
-  env = {
-    DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
-  }
-  args = "rm $(cat $HOME/container-list.json)"
-}
-
-action "Debug list" {
-  uses = "helaili/debug-action@master"
-  needs = ["Generate Container List"]
-  args = "$HOME/container-list.json"
 }
