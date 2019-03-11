@@ -1,8 +1,15 @@
 workflow "Continuous Integration" {
   on = "push"
   resolves = [
-    "Test",
+    "Test", "Get Deployments debug"
   ]
+}
+
+action "Get Deployments debug" {
+  uses = "actions/bin/curl@master"
+  needs = ["Test Webapp List empty"]
+  secrets = ["GITHUB_TOKEN"]
+  args = "https://api.github.com/repos/octodemo/MySampleExpressAppOnAzure/deployments?ref=${GITHUB_REF:11}"
 }
 
 action "Install" {
@@ -136,7 +143,8 @@ action "Update deployment status" {
 workflow "Clean up" {
   on = "pull_request"
   resolves = [
-    "Delete Docker Repository"
+    "Delete Docker Repository",
+    "Get Deployments",
   ]
 }
 
@@ -173,7 +181,6 @@ action "Test Webapp List empty" {
   args = ["filesize=$(wc -c < $HOME/webapp-list.json); echo $filesize; if [ \"$filesize\" -eq 3 ]; then exit 78; else exit 0; fi"]
 }
 
-
 action "Delete Webapps" {
   uses = "Azure/github-actions/cli@master"
   secrets = [
@@ -205,4 +212,11 @@ action "Delete Docker Repository" {
     WEBAPP_NAME = "mysampleexpressapp-actions"
     AZURE_SCRIPT = "az acr repository delete --name octodemo --repository ${WEBAPP_NAME}/${GITHUB_REF:11} --yes"
   }
+}
+
+action "Get Deployments" {
+  uses = "actions/bin/curl@master"
+  needs = ["Test Webapp List empty"]
+  secrets = ["GITHUB_TOKEN"]
+  args = "https://api.github.com/repos/octodemo/MySampleExpressAppOnAzure/deployments?ref=${GITHUB_REF:11}"
 }
