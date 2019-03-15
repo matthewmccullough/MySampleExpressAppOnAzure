@@ -8,8 +8,8 @@ action "Master branch?" {
   args = "branch master"
 }
 
-action "./.github/updatechangelog" {
-  uses = "./.github/updatechangelog"
+action "./.github/createrelease" {
+  uses = "./.github/createrelease"
   needs = ["Master branch?"]
   secrets = [
     "GITHUB_TOKEN",
