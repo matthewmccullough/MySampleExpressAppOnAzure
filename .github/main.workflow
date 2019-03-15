@@ -11,5 +11,7 @@ action "Master branch?" {
 action "./.github/updatechangelog" {
   uses = "./.github/updatechangelog"
   needs = ["Master branch?"]
-  secrets = ["GITHUB_PAT"]
+  secrets = [
+    "GITHUB_TOKEN",
+  ]
 }
