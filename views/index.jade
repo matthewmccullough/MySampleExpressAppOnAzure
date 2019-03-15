@@ -1,5 +1,24 @@
-extends layout
-
-block content
-  h1= title
-  Thanks a bunch for coming to #{title} on 2019-03-15 13:15 PDT
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    section(class="hero")
+      header(id="header")
+        a(id="logo", href="#") GH+MS
+        nav
+          a(id="menu-icon") &#8801;
+      header(class="hero-header")
+        h1(class="hero-title") DevTools for the 21st century
+      footer(class="hero-footer")
+        a(class="button button-primary", href="#") Go GitHub
+        a(class="button", href="#") Go Azure
+    article
+      h2 The match made just for you
+      p.
+        You've tried GitHub. You've mastered Azure DevOps. But 
+      p.
+        donec tincidunt torquent ultricies convallis sodales faucibus magna, fringilla lorem blandit sollicitudin donec faucibus curae orci molestie, et proin curae aliquet venenatis ligula amet vivamus orci varius arcu.
+      p.
+        Laoreet fusce condimentum venenatis quisque imperdiet ornare cras faucibus convallis, pharetra habitasse elementum ut bibendum per sociosqu phasellus etiam, velit faucibus integer torquent leo elementum maecenas netus.
