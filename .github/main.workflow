@@ -1,26 +1,5 @@
 workflow "Continuous Integration" {
   on = "push"
-  resolves = [
-    "Test", "Get Deployments debug"
-  ]
-}
-
-action "Get Deployments debug" {
-  uses = "actions/bin/curl@master"
-  needs = ["Test Webapp List empty"]
-  secrets = ["GITHUB_TOKEN"]
-  args = "https://api.github.com/repos/octodemo/MySampleExpressAppOnAzure/deployments?ref=${GITHUB_REF:11}"
-}
-
-action "Install" {
-  uses = "actions/npm@master"
-  args = "install"
-}
-
-action "Test" {
-  uses = "actions/npm@master"
-  needs = ["Install"]
-  args = "test"
 }
 
 workflow "Documentation" {
@@ -148,14 +127,8 @@ workflow "Clean up" {
   ]
 }
 
-action "Filter closed PRs" {
-  uses = "actions/bin/filter@master"
-  args = "action closed"
-}
-
 action "Azure Login for Cleanup" {
   uses = "Azure/github-actions/login@master"
-  needs = ["Filter closed PRs"]
   env = {
     AZURE_SUBSCRIPTION = "PAYG - GitHub Billing"
   }
@@ -175,18 +148,11 @@ action "Get Webapp List" {
   }
 }
 
-action "Test Webapp List empty" {
-  uses = "actions/bin/sh@master"
-  needs = ["Get Webapp List"]
-  args = ["filesize=$(wc -c < $HOME/webapp-list.json); echo $filesize; if [ \"$filesize\" -eq 3 ]; then exit 78; else exit 0; fi"]
-}
-
 action "Delete Webapps" {
   uses = "Azure/github-actions/cli@master"
   secrets = [
     "AZURE_SUBSCRIPTION_ID",
   ]
-  needs = ["Test Webapp List empty"]
   env = {
     RESOURCE_GROUP = "github-octodemo"
     AZURE_SCRIPT = "WEBAPP_ID_LIST=$(jq -j '.[].id+\" \"' $HOME/webapp-list.json) && az webapp delete --ids $WEBAPP_ID_LIST"
@@ -195,7 +161,6 @@ action "Delete Webapps" {
 
 action "Azure Registry Login for Cleanup" {
   uses = "actions/docker/login@master"
-  needs = ["Test Webapp List empty"]
   env = {
     DOCKER_REGISTRY_URL = "octodemo.azurecr.io"
   }
@@ -216,7 +181,6 @@ action "Delete Docker Repository" {
 
 action "Get Deployments" {
   uses = "actions/bin/curl@master"
-  needs = ["Test Webapp List empty"]
   secrets = ["GITHUB_TOKEN"]
   args = "https://api.github.com/repos/octodemo/MySampleExpressAppOnAzure/deployments?ref=${GITHUB_REF:11}"
 }
