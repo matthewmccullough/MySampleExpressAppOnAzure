@@ -1,6 +1,6 @@
 workflow "Create Release" {
   on = "push"
-  resolves = ["./.github/updatechangelog"]
+  resolves = ["./.github/createrelease"]
 }
 
 action "Master branch?" {
