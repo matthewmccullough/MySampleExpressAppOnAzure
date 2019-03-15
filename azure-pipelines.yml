@@ -27,3 +27,11 @@ steps:
     includeRootFolder: false
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
+
+- task: AzureRmWebAppDeployment@3
+  inputs:
+    azureSubscription: 'Pay-As-You-Go'
+    WebAppName: 'matthew-expressdemo'
+    Package: '$(System.DefaultWorkingDirectory)'
+    GenerateWebConfig: true
+    WebConfigParameters: '-Handler iisnode -NodeStartFile server.js -appType node'
