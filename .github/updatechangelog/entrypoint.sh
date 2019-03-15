@@ -4,4 +4,4 @@ set -e
 
 echo "Set exports"
 
-export PAT-TOKEN="$PAT-TOKEN"
+export GITHUB_PAT="$GITHUB_PAT"
