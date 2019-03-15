@@ -1,5 +1,8 @@
-### Code owners
+# Code owners
 
-## JS Code belongs to the replicants team
-*.js     @octodemo/replicants
-*.html   @octodemo/replicants
+# JS Code belongs to the front end team
+*.js     @pravipati
+
+# Page code belongs to the CSS/HTML team
+*.html   @matthewmccullough
+*.jade   @matthewmccullough
