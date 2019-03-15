@@ -1,5 +1,6 @@
 ### Code owners
 
 ## JS Code belongs to the replicants team
-*.js     @octodemo/replicants
-*.html   @octodemo/replicants
+*.js     @pravipati
+*.html   @matthewmccullough
+*.jade   @matthewmccullough
