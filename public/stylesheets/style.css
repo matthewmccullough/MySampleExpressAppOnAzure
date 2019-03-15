@@ -30,7 +30,7 @@ body {
     padding: 1em;
     box-sizing: border-box;
     color: white;
-    background: url(https://images.unsplash.com/photo-1500417148159-68083bd7333a) center center no-repeat;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)), url(/images/heroimage.jpg);
     background-size: cover;
 }
 
