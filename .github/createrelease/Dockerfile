@@ -1,10 +1,12 @@
-FROM appropriate/curl
+FROM mhart/alpine-node:10
 
-RUN apk -v --update add \
-  make \
-  curl \
-  jq
+WORKDIR /
 
-COPY  "entrypoint.sh" "/entrypoint.sh"
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
+ENV GITHUB_EVENT_PATH=$GITHUB_EVENT_PATH
 
-ENTRYPOINT ["/entrypoint.sh"]
+COPY ["app.js", "package.json", "./"]
+
+RUN npm install
+
+CMD ["node", "app.js"]
