@@ -20,3 +20,5 @@ octokit.repos.listForOrg({
 }).then(({ data, status, headers }) => {
 
 })
+
+const result = await octokit.issues.create({"matthewmccullough", "MySampleExpressAppOnAzure", "testing the action", "did it work", "pravipati"})
