@@ -17,6 +17,12 @@ This application demonstrates the power of GitHub and Azure DevOps, running in h
 - [git-pr-release-action](https://github.com/bakunyo/git-pr-release-action)
 - [git-pr-release marketplace](https://github.com/marketplace/actions/git-pr-release)
 
+# How to generate a release
+
+1. Merge commits into `master`
+2. When you're ready to stage those commits for production, add them to `staging`
+
+
 # Thanks to
 - Pavan Ravipati
 - Bas Peters
