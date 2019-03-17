@@ -1,6 +1,6 @@
 workflow "Create Release" {
   on = "push"
-  resolves = ["./.github/createrelease"]
+  resolves = ["git-pr-release"]
 }
 
 action "Master branch?" {
@@ -8,10 +8,8 @@ action "Master branch?" {
   args = "branch master"
 }
 
-action "./.github/createrelease" {
-  uses = "./.github/createrelease"
+action "git-pr-release" {
+  uses = "bakunyo/git-pr-release-action@master"
   needs = ["Master branch?"]
-  secrets = [
-    "GITHUB_TOKEN",
-  ]
+  secrets = ["GITHUB_TOKEN"]
 }
