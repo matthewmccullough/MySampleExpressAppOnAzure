@@ -1,15 +1,15 @@
-workflow "Create Release" {
-  on = "push"
+workflow "Create PR to master" {
   resolves = ["git-pr-release"]
+  on = "push"
 }
 
-action "Master branch?" {
-  uses = "actions/bin/filter@d820d56839906464fb7a57d1b4e1741cf5183efa"
-  args = "branch master"
+action "Filter branch" {
+  uses = "actions/bin/filter@24a566c2524e05ebedadef0a285f72dc9b631411"
+  args = "branch staging"
 }
 
 action "git-pr-release" {
   uses = "bakunyo/git-pr-release-action@master"
-  needs = ["Master branch?"]
+  needs = ["Filter branch"]
   secrets = ["GITHUB_TOKEN"]
 }
