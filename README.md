@@ -15,6 +15,7 @@ This application demonstrates the power of GitHub and Azure DevOps, running in h
 # Resources
 
 - [git-pr-release-action](https://github.com/bakunyo/git-pr-release-action)
+- [git-pr-release marketplace](https://github.com/marketplace/actions/git-pr-release)
 
 # Thanks to
 - Pavan Ravipati
