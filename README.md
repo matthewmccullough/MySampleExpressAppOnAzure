@@ -22,7 +22,7 @@ This application demonstrates the power of GitHub and Azure DevOps, running in h
 1. Make your changes in a branch and open a PR with `master` as the base branch
 2. stage those changes by opening a PR between your working branch and `staging`
 3. when you’re ready to add that commit to a release, merge the PR into `staging`.
-4. the action will automatically run and either open a release PR with all the PRs and commits that have been merged in `staging` and that area currently open against `master
+4. the action will automatically run and either open a release PR with all the PRs and commits that have been merged in `staging` and that area currently open against `master`
 
 
 # Thanks to
