@@ -4,5 +4,6 @@
 *.js     @pravipati
 
 # Page code belongs to the CSS/HTML team
-*.html   @matthewmccullough
-*.jade   @matthewmccullough
+*.html   @pravipati
+*.css    @shankuniyogi
+*.jade   @matthewtestperson1
