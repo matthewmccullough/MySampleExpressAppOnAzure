@@ -5,7 +5,7 @@ workflow "Create Pull Request to master" {
 
 action "Filter branch" {
   uses = "actions/bin/filter@24a566c2524e05ebedadef0a285f72dc9b631411"
-  args = "branch staging"
+  args = "branch stagings"
 }
 
 action "git-pr-release" {
