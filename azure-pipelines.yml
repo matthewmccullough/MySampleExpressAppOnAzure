@@ -30,8 +30,8 @@ steps:
 
 - task: AzureRmWebAppDeployment@3
   inputs:
-    azureSubscription: 'Pay-As-You-Go (a56cca7c-d586-494f-9edf-89729f0498da)'
-    WebAppName: 'matthew-expressdemo'
+    azureSubscription: 'Visual Studio Enterprise (0ce9e07b-39a2-4c6d-9ba2-b961ffbf87cb)'
+    WebAppName: 'pholleran-expressdemo'
     Package: '$(System.DefaultWorkingDirectory)'
     GenerateWebConfig: true
     WebConfigParameters: '-Handler iisnode -NodeStartFile server.js -appType node'
