@@ -30,7 +30,7 @@ steps:
 
 - task: AzureRmWebAppDeployment@3
   inputs:
-    azureSubscription: 'azure-enterprise'
+    azureSubscription: 'Visual Studio Enterprise'
     WebAppName: 'pholleran-expressdemo'
     Package: '$(System.DefaultWorkingDirectory)'
     GenerateWebConfig: true
