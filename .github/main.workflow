@@ -1,4 +1,4 @@
-workflow "Create PR to master" {
+workflow "Create Pull Request to master" {
   resolves = ["git-pr-release"]
   on = "push"
 }
